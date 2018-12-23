@@ -1,5 +1,6 @@
 package models
 
-class User {
-
-}
+class User(
+  id: Int,
+  name: String
+)
