@@ -1,5 +1,30 @@
-@()
+@import helper._
+
+@(userForm: Form[UserForm])(users: Seq[User])(implicit messages: Messages)
 
 @main("Welcome to Play") {
-  <h1>Welcome to Play!</h1>
+<h1>Welcome to Play!</h1>
+<h2>This is my first MVC shot</h2>
+@for(user <- users){
+<h3>@user.name @user.age</h3>
+}
+
+@form(action = routes.UserController.indexPOST()){
+@inputText(userForm("id"))
+@inputText(userForm("name"))
+@inputText(userForm("age"))
+
+<input type="submit" name="action" value="Add">
+}
+
+
+<button onclick="myFunction()">Try it</button>
+<script>
+function myFunction() {
+  alert("@users.mkString("\\n")");
+}
+
+</script>
+
+
 }

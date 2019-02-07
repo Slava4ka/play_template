@@ -1,6 +1,5 @@
 package models
 
-class User(
-  id: Int,
-  name: String
-)
+import org.joda.time.DateTime
+
+case class User(id: Int, name: String, age: Int, deleted: Option[DateTime] = None)
