@@ -6,7 +6,10 @@ class UserDAO {
   def findAll: Seq[User] = UserDAO.users
 
   def addUser(name: String, age: Int) = {
-    val  id = UserDAO.users.last.id +1
+    val id = UserDAO.users.lastOption match {
+      case Some(value) => value.id + 1
+      case None => 1
+    }
     UserDAO.users = UserDAO.users :+ User(id, name, age)
     println(UserDAO.users)
   }
