@@ -3,7 +3,20 @@ package daos
 import models.User
 
 class UserDAO {
-  def findAll: Seq[User] = UserDAO.users
+  def findAll: Seq[User] = {
+    UserDAO.users.headOption match {
+      case Some(value) => UserDAO.users
+      case None => Seq(User(0, "None", 0))
+    }
+  }
+
+  def findDeletedUsers() = {
+    UserDAO.users.filter(_.deleted.isDefined)
+  }
+
+  def findActiveUsers() = {
+    UserDAO.users.filter(_.deleted.isEmpty)
+  }
 
   def addUser(name: String, age: Int) = {
     val id = UserDAO.users.lastOption match {
@@ -12,6 +25,19 @@ class UserDAO {
     }
     UserDAO.users = UserDAO.users :+ User(id, name, age)
     println(UserDAO.users)
+  }
+
+  def removeUser(): Unit = {
+    // TODO:
+  }
+
+  def restoreUser() = {
+
+    // TODO:
+  }
+
+  def editUser() = {
+    // TODO:
   }
 }
 

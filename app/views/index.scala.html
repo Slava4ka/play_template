@@ -1,6 +1,6 @@
 @import helper._
 
-@(userForm: Form[UserForm])(users: Seq[User])(implicit messages: Messages)
+@(userForm: Form[UserForm])(users: Seq[User])(usersActive: Seq[User])(usersDelete: Seq[User])(implicit messages: Messages)
 
 @main("Welcome to Play") {
 <h1>Welcome to Play!</h1>
@@ -21,13 +21,23 @@
 }
 
 </br>
-<button onclick="myFunction()">Show all elements</button>
-<button onclick="myFunction()">List active users</button>
-<button onclick="myFunction()">List deleted users</button>
+<button onclick="myFunctionAll()">Show all elements</button>
+<button onclick="myFunctionActive()">List active users</button>
+<button onclick="myFunctionDelete()">List deleted users</button>
+
 <script>
-function myFunction() {
+function myFunctionAll() {
   alert("@users.mkString("\\n")");
 }
+
+function myFunctionDelete() {
+  alert("@usersDelete.mkString("\\n")");
+}
+
+function myFunctionActive() {
+  alert("@usersActive.mkString("\\n")");
+}
+
 
 </script>
 

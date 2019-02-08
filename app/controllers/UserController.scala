@@ -9,7 +9,7 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
 
   def index() = Action { implicit request: Request[AnyContent] =>
     val users = userService.findAll()
-    Ok(views.html.index(UserForm.form)(users))
+    Ok(views.html.index(UserForm.form)(users)(userService.findActiveUsers())(userService.findDeletedUsers()))
   }
 
   def indexPOST() = Action { implicit request =>
@@ -21,13 +21,13 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
         //с обработкой ошибок
         UserForm.form.bindFromRequest.fold(
           formWithErrors => {
-            BadRequest(views.html.index(formWithErrors)(userService.findAll()))
+            BadRequest(views.html.index(formWithErrors)(userService.findAll())(userService.findActiveUsers())(userService.findDeletedUsers()))
           },
           formData => {
             userService.addUser(formData.name, formData.age)
             val users = userService.findAll()
             println(users.toString())
-            Ok(views.html.index(UserForm.form)(users))
+            Ok(views.html.index(UserForm.form)(users)(userService.findActiveUsers())(userService.findDeletedUsers()))
           }
         )
       }
