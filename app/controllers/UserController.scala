@@ -1,9 +1,9 @@
 package controllers
 
 import com.google.inject.Inject
+import models.UserForm
 import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
 import services.UserService
-import models.UserForm
 
 class UserController @Inject()(cc: ControllerComponents, userService: UserService) extends AbstractController(cc) with play.api.i18n.I18nSupport {
 
@@ -13,7 +13,9 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
   }
 
   def indexPOST() = Action { implicit request =>
-
+    println("***************************************************")
+    println(request.body.asFormUrlEncoded)
+    println("***************************************************")
     request.body.asFormUrlEncoded.get("action").headOption match {
       case Some("add") => {
         //с обработкой ошибок
@@ -22,7 +24,7 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
             BadRequest(views.html.index(formWithErrors)(userService.findAll()))
           },
           formData => {
-            userService.addUser(formData.id, formData.name, formData.age)
+            userService.addUser(formData.name, formData.age)
             val users = userService.findAll()
             println(users.toString())
             Ok(views.html.index(UserForm.form)(users))
@@ -37,7 +39,9 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
   }
 
 
-  def addElementToDB() = TODO
+  def addElementToDB() = {
+    TODO
+  }
 
   def deleteElementFromDb() = TODO
 
@@ -45,3 +49,4 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
     Ok(views.html.testPage(a = "i send this message"))
   }
 }
+

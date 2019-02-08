@@ -5,7 +5,8 @@ import models.User
 class UserDAO {
   def findAll: Seq[User] = UserDAO.users
 
-  def addUser(id: Int, name: String, age: Int) = {
+  def addUser(name: String, age: Int) = {
+    val  id = UserDAO.users.last.id +1
     UserDAO.users = UserDAO.users :+ User(id, name, age)
     println(UserDAO.users)
   }

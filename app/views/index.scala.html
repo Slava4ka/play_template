@@ -10,17 +10,20 @@
 }
 
 @form(action = routes.UserController.indexPOST()){
-@inputText(userForm("id"))
 @inputText(userForm("name"))
 @inputText(userForm("age"))
 
 
 <button type="submit" name="action" value="add">Add element</button>
 <button type="submit" name="action" value="remove">Remove element</button>
+<button type="submit" name="action" value="restore">Restore element</button>
+<button type="submit" name="action" value="edit">Edit element</button>
 }
 
 </br>
-<button onclick="myFunction()">Try it</button>
+<button onclick="myFunction()">Show all elements</button>
+<button onclick="myFunction()">List active users</button>
+<button onclick="myFunction()">List deleted users</button>
 <script>
 function myFunction() {
   alert("@users.mkString("\\n")");
