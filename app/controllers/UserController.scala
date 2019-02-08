@@ -14,19 +14,32 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
 
   def indexPOST() = Action { implicit request =>
 
-    //с обработкой ошибок
-    UserForm.form.bindFromRequest.fold(
-      formWithErrors => {
-        BadRequest(views.html.index(formWithErrors)(userService.findAll()))
-      },
-      formData => {
-        userService.addUser(formData.id, formData.name, formData.age)
-        val users = userService.findAll()
-        println(users.toString())
-        Ok(views.html.index(UserForm.form)(users))
+    request.body.asFormUrlEncoded.get("action").headOption match {
+      case Some("add") => {
+        //с обработкой ошибок
+        UserForm.form.bindFromRequest.fold(
+          formWithErrors => {
+            BadRequest(views.html.index(formWithErrors)(userService.findAll()))
+          },
+          formData => {
+            userService.addUser(formData.id, formData.name, formData.age)
+            val users = userService.findAll()
+            println(users.toString())
+            Ok(views.html.index(UserForm.form)(users))
+          }
+        )
       }
-    )
+
+      case Some("remove") => Ok("Clicked remove")
+
+      case _ => BadRequest("This action is not allowed")
+    }
   }
+
+
+  def addElementToDB() = TODO
+
+  def deleteElementFromDb() = TODO
 
   def testString() = Action {
     Ok(views.html.testPage(a = "i send this message"))
