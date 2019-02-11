@@ -2,6 +2,7 @@ package controllers
 
 import com.google.inject.Inject
 import models.UserForm
+import play.api.data.Form
 import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
 import services.UserService
 
@@ -32,7 +33,28 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
         )
       }
 
-      case Some("remove") => Ok("Clicked remove")
+      case Some("remove") => {
+        UserForm.form.bindFromRequest.fold(
+          formWithErrors => {
+            BadRequest(views.html.index(formWithErrors)(userService.findAll())(userService.findActiveUsers())(userService.findDeletedUsers()))
+          },
+          formData => {
+            println("this_-_-_-_remove")
+           // userService.removeUser()
+            println(formData.name, formData.age)
+            println("this_-_-_-_remove")
+            val users = userService.findAll()
+            Ok(views.html.index(UserForm.form)(users)(userService.findActiveUsers())(userService.findDeletedUsers()))
+          }
+        )
+
+/*
+        val a = request.body.asFormUrlEncoded.toSeq.map(a => a.map(b => b))
+        val aa = a.head.apply("deleteItem").head
+        val name1 = aa.
+
+        Ok(a.toString())*/
+      }
 
       case _ => BadRequest("This action is not allowed")
     }
@@ -47,6 +69,10 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
 
   def testString() = Action {
     Ok(views.html.testPage(a = "i send this message"))
+  }
+
+  def delete(id: Int)() = Action{
+    Redirect("/")
   }
 }
 

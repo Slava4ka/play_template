@@ -9,6 +9,13 @@
 <h3>@user.name @user.age</h3>
 }
 
+
+<select id="SelecUserForRemove">
+    @for(userActive <- usersActive){
+    <option value=@userActive.id>@userActive.name.toString()</option>
+    }
+</select>
+
 @form(action = routes.UserController.indexPOST()){
 @inputText(userForm("name"))
 @inputText(userForm("age"))
@@ -24,6 +31,10 @@
 <button onclick="myFunctionAll()">Show all elements</button>
 <button onclick="myFunctionActive()">List active users</button>
 <button onclick="myFunctionDelete()">List deleted users</button>
+<br>
+<br>
+<br>
+<button id="testButton">_____TEST BUTTON_______</button>
 
 <script>
 function myFunctionAll() {
@@ -37,6 +48,42 @@ function myFunctionDelete() {
 function myFunctionActive() {
   alert("@usersActive.mkString("\\n")");
 }
+
+
+
+</script>
+
+
+<script>
+$(document).ready(function(){
+  $("#testButton").click(function(){
+    $.ajax({
+    url: "/user/1",
+    });
+  });
+
+//работа с option для удаления элемента
+
+var currentID = $('#SelecUserForRemove').val();
+console.log("currentID= "+currentID)
+$('#SelecUserForRemove').change(function() {
+    currentID = $(this).val();
+	console.log(("currentID= "+currentID))
+});
+
+
+
+
+});
+
+
+
+
+
+
+
+
+
 
 
 </script>

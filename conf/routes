@@ -7,6 +7,7 @@
 GET     /                                  controllers.UserController.index
 POST    /                                  controllers.UserController.indexPOST
 
+GET  /user/:id                          controllers.UserController.delete(id: Int)
 
 GET     /test                              controllers.UserController.testString
 
