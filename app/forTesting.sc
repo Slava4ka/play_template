@@ -18,6 +18,7 @@ var users: Seq[User] =
     User(2, "Alex Mcqueen", 26),
     User(3, "Tom Ford", 28))
 
+
 users.filterNot(a => (a.id == 1) && (a.name == "Nick Holland"))
 val l = users.find(a => a.id == 1)
 
@@ -51,3 +52,12 @@ implicit val userWrites = new Writes[User] {
 }
 
 val jsonUser = users.map(user => Json.toJson(user))
+
+
+
+var users3: Seq[User] =
+  Seq(User(1, "Nick Holland", 25),
+    User(2, "Alex Mcqueen", 26),
+    User(3, "Tom Ford", 28))
+
+val nameT = users3.filter(user => user.id==1)

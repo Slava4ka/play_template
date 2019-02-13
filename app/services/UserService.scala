@@ -25,9 +25,10 @@ class UserService @Inject()(userDAO: UserDAO) {
       def writes(user: User) = Json.obj(
         "name" -> user.name,
                 "age" -> user.age,
+
       )
     }
-    val jsonUser = Json.toJson(userDAO.findActiveUsers(id))
+    val jsonUser = Json.toJson(findActiveUsers.filter(a => a.id == id+1).head)
     return jsonUser
   }
 

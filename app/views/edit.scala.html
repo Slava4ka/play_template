@@ -25,6 +25,7 @@
 <br>
 
 <p><input type="submit" id="button_edit" value="Редактировать"></p>
+<p><input type="submit" id="button_exit" value="Назад"></p>
 
 <script>
 $(document).ready(function(){
@@ -40,7 +41,7 @@ $(document).ready(function(){
             url: "/send_id/"+currentID,
             type: 'POST',
             success: function (data) {
-                console.log("edit success", "data=", data);
+                console.log("edit success", "data=", data, " ", data[name] );
                 $('#name').val(data['name'])
                 $('#age').val(data['age'])
                 },
@@ -70,8 +71,12 @@ var data = JSON.stringify(obj);
 xhr.send(data);
     });
 
+    $('#button_exit').click(function(){
+        window.location.replace("/")
+    });
 
 
 });
+
 </script>
 }

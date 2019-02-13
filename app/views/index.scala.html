@@ -9,59 +9,97 @@
 <h3>@user.name @user.age</h3>
 }
 
-<h2>SelecUserForRemove</h2>
-<select id="SelecUserForRemove">
-    <option>выберете элемент для удаления</option>
-    @for(userActive <- usersActive){
-    <option value=@userActive.id>@userActive.name.toString()</option>
-    }
-</select>
 
-<h2>SelecUserForRestore</h2>
-<select id="SelecUserForRestore">
-    <option>выберете элемент для восстановления</option>
-    @for(userDelete<- usersDelete){
-    <option value=@userDelete.id>@userDelete.name.toString()</option>
-    }
-</select>
+<div class="container">
+    <div class="row">
+        <div class="col-2"></div>
+
+        <div class="col-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="center-block text-center">
+                        @form(action = routes.UserController.indexPOST()){
+                        <div id="sample_div">
+                            <div class="form-group field-middle_name row">
+                                <div class="col-sm-6 col-md-6 col-xs-6 no-padding">
+                                    @inputText(userForm("name"))
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-xs-6 no-padding">
+                                    @inputText(userForm("age"))
+                                </div>
+                            </div>
+                            <div class="help-block row"></div>
+
+                        </div>
+
+                        <button class="btn btn-success" type="submit" name="action" value="add">Add element</button>
+                        }
+
+                        <div id="sample_div2">
+                            <div class="form-group field-middle_name row">
+                                <div class="col-sm-6 col-md-6 col-xs-6 no-padding">
+                                    <h4>Selec User For Remove</h4>
+                                    <select id="SelecUserForRemove">
+                                        <option>выберете элемент для удаления</option>
+                                        @for(userActive <- usersActive){
+                                        <option value=@userActive.id>@userActive.name.toString()</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 col-md-6 col-xs-6 no-padding">
+                                    <h4>Selec User For Restore</h4>
+
+                                    <select id="SelecUserForRestore">
+                                        <option>выберете элемент для восстановления</option>
+                                        @for(userDelete<- usersDelete){
+                                        <option value=@userDelete.id>@userDelete.name.toString()</option>
+                                        }
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="help-block row"></div>
+
+                        </div>
+                        <button type="submit" class="btn btn-danger" id="remove" name="action" value="remove">Remove
+                            element
+                        </button>
+                        <button type="submit" class="btn btn-success" id="restore" name="action" value="restore">Restore
+                            element
+                        </button>
+                        <button type="submit" class="btn btn-success" id="edit" name="action" value="edit">Edit
+                            element
+                        </button>
 
 
-@form(action = routes.UserController.indexPOST()){
-@inputText(userForm("name"))
-@inputText(userForm("age"))
+                        <div class="buttons" style="margin-top: 5%;">
+                            <button class="btn btn-primary" onclick="myFunctionAll()">Show all elements</button>
+                            <button class="btn btn-primary" onclick="myFunctionActive()">List active users</button>
+                            <button class="btn btn-primary" onclick="myFunctionDelete()">List deleted users</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2"></div>
+    </div>
+</div>
 
-<button type="submit" name="action" value="add">Add element</button>
-}
-
-<button type="submit" id="remove" name="action" value="remove">Remove element</button>
-<button type="submit" id="restore" name="action" value="restore">Restore element</button>
-<button type="submit" id="edit" name="action" value="edit">Edit element</button>
-
-<br>
-<br>
-
-<button onclick="myFunctionAll()">Show all elements</button>
-<button onclick="myFunctionActive()">List active users</button>
-<button onclick="myFunctionDelete()">List deleted users</button>
-<br>
-<br>
-<br>
-<button id="testButton">_____TEST BUTTON_______</button>
 
 <script>
-$(document).ready(function(){
-
     function myFunctionAll() {
         alert("@users.mkString("\\n")");
     }
 
     function myFunctionDelete() {
-        alert("@usersDelete.mkString("\\n")");
+        @if(usersDelete.isEmpty){alert("пустой список");}else{alert("@usersDelete.mkString("\\n")");}
     }
 
     function myFunctionActive() {
         alert("@usersActive.mkString("\\n")");
     }
+
+$(document).ready(function(){
 
 // удаление
 var currentID = $('#SelecUserForRemove').val();
@@ -108,7 +146,7 @@ console.log("currentID= "+currentID)
    });
 
    $('#edit').click(function(){
-       window.location.replace("/edit_user")
+       @if(usersActive.isEmpty){alert("Нет пользователей доступных для удаления")}else{window.location.replace("/edit_user")}
    });
 
 });
@@ -118,5 +156,21 @@ console.log("currentID= "+currentID)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
+
 }

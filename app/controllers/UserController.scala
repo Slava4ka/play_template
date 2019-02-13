@@ -13,9 +13,6 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
   }
 
   def indexPOST() = Action { implicit request =>
-    println("***************************************************")
-    println(request.body.asFormUrlEncoded)
-    println("***************************************************")
     request.body.asFormUrlEncoded.get("action").headOption match {
       case Some("add") => {
         //с обработкой ошибок
@@ -25,26 +22,21 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
           },
           formData => {
             userService.addUser(formData.name, formData.age)
-            val users = userService.findAll
-            println(users.toString())
-            Ok(views.html.index(UserForm.form)(users)(userService.findActiveUsers)(userService.findDeletedUsers))
+            Ok(views.html.index(UserForm.form)(userService.findAll)(userService.findActiveUsers)(userService.findDeletedUsers))
           }
         )
       }
-
       case _ => BadRequest("This action is not allowed")
     }
   }
 
   def remove(id: Int)() = Action {
     userService.removeUser(id)
-    println(userService.findAll.toString())
     Redirect(routes.UserController.index())
   }
 
   def restore(id: Int)() = Action {
     userService.restoreUser(id)
-    println(userService.findAll.toString())
     Redirect(routes.UserController.index())
   }
 
@@ -60,23 +52,17 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
 
   def getElementById(id: Int) = Action {
     println(id)
+    println(userService.makeJsonUser(id))
+    println(userService.findActiveUsers)
     Ok(userService.makeJsonUser(id))
   }
 
   def edit = Action { request =>
     val json = request.body.asJson.get
-
     val id = (json \ "id").as[Int]
     val name = (json \ "name").as[String]
     val age = (json \ "age").as[String].toInt
-
-
-    println("Json: " + json)
-    println(id + " " + name + " " + age)
-
     userService.editUser(id, name, age)
-    println(userService.findAll)
-
     Ok(userService.findAll(id).toString)
   }
 
