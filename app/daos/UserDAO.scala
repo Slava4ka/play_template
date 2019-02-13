@@ -11,15 +11,15 @@ class UserDAO {
     }
   }
 
-  def findDeletedUsers() = {
+  def findDeletedUsers: Seq[User] = {
     UserDAO.users.filter(_.deleted.isDefined)
   }
 
-  def findActiveUsers() = {
+  def findActiveUsers: Seq[User] = {
     UserDAO.users.filter(_.deleted.isEmpty)
   }
 
-  def addUser(name: String, age: Int) = {
+  def addUser(name: String, age: Int): Unit = {
     val id = UserDAO.users.lastOption match {
       case Some(value) => value.id + 1
       case None => 1
@@ -28,34 +28,29 @@ class UserDAO {
     println(UserDAO.users)
   }
 
-  def removeUser(id: Int, name: String)= {
-    /*UserDAO.users.foreach(a => {
-      if (a.id == id) {
-        val temp = a.copy(deleted = Option(DateTime.now()))
-        UserDAO.users = UserDAO.users :+ temp
-        UserDAO.users = UserDAO.users.filterNot(_ == a)
-      }
-    })
-    UserDAO.users.sortBy(a => a.id)
-    */
+  def removeUser(id: Int): Unit = {
 
-   /* UserDAO.users
-      .find(user => user.id == id)
-      .map(user => user.copy(deleted = Option(DateTime.now)))
-  */
     val updatedUsers = UserDAO.users
-      .map(user => if(user.id == id) user.copy(deleted = Option(DateTime.now)) else user)
+      .map(user => if (user.id == id) user.copy(deleted = Option(DateTime.now)) else user)
 
     UserDAO.users = updatedUsers
   }
 
-  def restoreUser() = {
+  def restoreUser(id: Int): Unit = {
 
-    // TODO:
+    val updatedUsers = UserDAO.users
+      .map(user => if (user.id == id) user.copy(deleted = None) else user)
+
+    UserDAO.users = updatedUsers
   }
 
-  def editUser() = {
-    // TODO:
+  def editUser(id: Int, name: String, age: Int): Unit = {
+    val updatedUsers = UserDAO.users
+// т.к. id приходит по индексу в массиве, нужно прибалять 1. Тут сравневается значение, на не позиция в массиве.
+      .map(user => if (user.id == (id+1)) user.copy(name = name, age = age) else user)
+    println(updatedUsers)
+    UserDAO.users = updatedUsers
+    println(UserDAO.users)
   }
 }
 

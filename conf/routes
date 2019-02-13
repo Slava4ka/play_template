@@ -4,12 +4,16 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET     /                                  controllers.UserController.index
-POST    /                                  controllers.UserController.indexPOST
+GET     /                                          controllers.UserController.index
+POST    /                                          controllers.UserController.indexPOST
 
-GET  /user/:id                          controllers.UserController.delete(id: Int)
+GET  /remove_user/:id                              controllers.UserController.remove(id: Int)
+GET  /restore_user/:id                             controllers.UserController.restore(id: Int)
+GET  /edit_user                                    controllers.UserController.generateEditPage
 
-GET     /test                              controllers.UserController.testString
+
+POST /send_id/:id                                   controllers.UserController.getElementById(id: Int)
+POST /edit                                          controllers.UserController.edit
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

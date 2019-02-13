@@ -9,25 +9,37 @@
 <h3>@user.name @user.age</h3>
 }
 
-
+<h2>SelecUserForRemove</h2>
 <select id="SelecUserForRemove">
+    <option>выберете элемент для удаления</option>
     @for(userActive <- usersActive){
     <option value=@userActive.id>@userActive.name.toString()</option>
     }
 </select>
 
+<h2>SelecUserForRestore</h2>
+<select id="SelecUserForRestore">
+    <option>выберете элемент для восстановления</option>
+    @for(userDelete<- usersDelete){
+    <option value=@userDelete.id>@userDelete.name.toString()</option>
+    }
+</select>
+
+
 @form(action = routes.UserController.indexPOST()){
 @inputText(userForm("name"))
 @inputText(userForm("age"))
 
-
 <button type="submit" name="action" value="add">Add element</button>
-<button type="submit" name="action" value="remove">Remove element</button>
-<button type="submit" name="action" value="restore">Restore element</button>
-<button type="submit" name="action" value="edit">Edit element</button>
 }
 
-</br>
+<button type="submit" id="remove" name="action" value="remove">Remove element</button>
+<button type="submit" id="restore" name="action" value="restore">Restore element</button>
+<button type="submit" id="edit" name="action" value="edit">Edit element</button>
+
+<br>
+<br>
+
 <button onclick="myFunctionAll()">Show all elements</button>
 <button onclick="myFunctionActive()">List active users</button>
 <button onclick="myFunctionDelete()">List deleted users</button>
@@ -37,49 +49,69 @@
 <button id="testButton">_____TEST BUTTON_______</button>
 
 <script>
-function myFunctionAll() {
-  alert("@users.mkString("\\n")");
-}
-
-function myFunctionDelete() {
-  alert("@usersDelete.mkString("\\n")");
-}
-
-function myFunctionActive() {
-  alert("@usersActive.mkString("\\n")");
-}
-
-
-
-</script>
-
-
-<script>
 $(document).ready(function(){
-  $("#testButton").click(function(){
+
+    function myFunctionAll() {
+        alert("@users.mkString("\\n")");
+    }
+
+    function myFunctionDelete() {
+        alert("@usersDelete.mkString("\\n")");
+    }
+
+    function myFunctionActive() {
+        alert("@usersActive.mkString("\\n")");
+    }
+
+// удаление
+var currentID = $('#SelecUserForRemove').val();
+console.log("currentID= "+currentID)
+
+  $("#remove").click(function(){
     $.ajax({
-    url: "/user/1",
+    type: 'GET',
+    url: "/remove_user/"+currentID,
+    success: function (data) {
+        window.location.replace('http://localhost:9000');
+        console.log("remove success", "data=", data);
+        },
+    error: function () { alert("Не удалось удалить элемент") }
     });
   });
 
 //работа с option для удаления элемента
-
-var currentID = $('#SelecUserForRemove').val();
-console.log("currentID= "+currentID)
-$('#SelecUserForRemove').change(function() {
+  $('#SelecUserForRemove').change(function() {
     currentID = $(this).val();
 	console.log(("currentID= "+currentID))
+   });
+
+//восстановление
+   var currentID_restore = $('#SelecUserForRemove').val();
+   console.log("currentID_restore= "+currentID_restore)
+
+  $("#restore").click(function(){
+    $.ajax({
+    type: 'GET',
+    url: "/restore_user/"+currentID_restore,
+    success: function (data) {
+        window.location.replace('http://localhost:9000');
+        console.log("restore success", "data=", data);
+        },
+    error: function () { alert("Не удалось восстановить элемент") }
+    });
+  });
+
+//работа с option для восстановления
+  $('#SelecUserForRestore').change(function() {
+    currentID_restore = $(this).val();
+	console.log(("currentID_restore= "+currentID_restore))
+   });
+
+   $('#edit').click(function(){
+       window.location.replace("/edit_user")
+   });
+
 });
-
-
-
-
-});
-
-
-
-
-
 
 
 
@@ -87,6 +119,4 @@ $('#SelecUserForRemove').change(function() {
 
 
 </script>
-
-
 }

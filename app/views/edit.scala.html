@@ -1,0 +1,77 @@
+@(users: Seq[User])(usersActive: Seq[User])
+
+@main("Edit user"){
+
+<h2>Select User's ID</h2>
+<div>
+    <select id="SelecUserForEdit" size="5" style='width:200px'>
+        @for(userActive <- usersActive){
+        <option value=@userActive.id>@userActive.id.toString(). @userActive.name.toString()</option>
+        }
+    </select>
+</div>
+<br>
+
+<p>
+    <b>Имя:</b><br>
+    <input type="text" id="name" placeholder="Выберете id">
+</p>
+
+<p>
+    <b>Возраст:</b><br>
+    <input type="text" id="age" placeholder="Выберете id">
+</p>
+
+<br>
+
+<p><input type="submit" id="button_edit" value="Редактировать"></p>
+
+<script>
+$(document).ready(function(){
+// берет id отправляет POST запросом на сервер, принимает имя и вставляет его в input
+    var currentID = $('#SelecUserForRemove').val();
+        console.log("currentID= "+currentID)
+    var idFromJson
+
+    $('#SelecUserForEdit').change(function() {
+    currentID = $(this).val()-1;
+        console.log("currentID= "+currentID);
+         $.ajax({
+            url: "/send_id/"+currentID,
+            type: 'POST',
+            success: function (data) {
+                console.log("edit success", "data=", data);
+                $('#name').val(data['name'])
+                $('#age').val(data['age'])
+                },
+        error: function () { alert("Не удалось отправить POST") }
+        });
+    });
+
+    $('#button_edit').click(function() {
+        var obj = new Object();
+        obj.id = currentID;
+        obj.name = $('#name').val();
+        obj.age = $('#age').val();
+        console.log(obj);
+
+       var xhr = new XMLHttpRequest();
+       var url = "/edit";
+       xhr.open("POST", url, true);
+       xhr.setRequestHeader("Content-Type", "application/json");
+       xhr.onload = function () {
+       if (xhr.readyState === 4 && xhr.status === 200) {
+            var json = JSON.stringify(xhr.responseText);
+            console.log(json);
+            window.location.replace("/")
+    }
+};
+var data = JSON.stringify(obj);
+xhr.send(data);
+    });
+
+
+
+});
+</script>
+}
