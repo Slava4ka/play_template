@@ -6,19 +6,19 @@ import models.User
 import play.api.libs.json.{JsValue, Json, Writes}
 
 class UserService @Inject()(userDAO: UserDAO) {
-  def findAll = userDAO.findAll
+  def findAll: Seq[User] = userDAO.findAll
 
-  def findDeletedUsers = userDAO.findDeletedUsers
+  def findDeletedUsers: Seq[User] = userDAO.findDeletedUsers
 
-  def findActiveUsers = userDAO.findActiveUsers
+  def findActiveUsers: Seq[User] = userDAO.findActiveUsers
 
-  def addUser(name: String, age: Int) = userDAO.addUser(name, age)
+  def addUser(name: String, age: Int): Unit = userDAO.addUser(name, age)
 
-  def removeUser(id: Int) = userDAO.removeUser(id)
+  def removeUser(id: Int): Unit = userDAO.removeUser(id)
 
-  def restoreUser(id: Int) = userDAO.restoreUser(id)
+  def restoreUser(id: Int): Unit = userDAO.restoreUser(id)
 
-  def editUser(id: Int, name: String, age: Int) = userDAO.editUser(id, name, age)
+  def editUser(id: Int, name: String, age: Int): Unit = userDAO.editUser(id, name, age)
 
   def makeJsonUser(id: Int): JsValue = {
     implicit val userWrites = new Writes[User] {
@@ -29,7 +29,7 @@ class UserService @Inject()(userDAO: UserDAO) {
       )
     }
     val jsonUser = Json.toJson(findActiveUsers.filter(a => a.id == id+1).head)
-    return jsonUser
+    jsonUser
   }
 
 
