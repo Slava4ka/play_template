@@ -9,11 +9,12 @@ POST    /                                          controllers.UserController.in
 
 GET  /remove_user/:id                              controllers.UserController.remove(id: Int)
 GET  /restore_user/:id                             controllers.UserController.restore(id: Int)
+
 GET  /edit_user                                    controllers.UserController.generateEditPage
 
 
 POST /send_id/:id                                   controllers.UserController.getElementById(id: Int)
-POST /edit                                          controllers.UserController.edit
+POST /edit/:id                                          controllers.UserController.edit(id: Int)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file                              controllers.Assets.versioned(path="/public", file: Asset)

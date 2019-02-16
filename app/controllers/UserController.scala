@@ -1,7 +1,8 @@
 package controllers
 
 import com.google.inject.Inject
-import models.UserForm
+import models.{User, UserForm}
+import play.api.libs.json.{Json, Writes}
 import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
 import services.UserService
 
@@ -21,7 +22,8 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
             BadRequest(views.html.index(formWithErrors)(userService.findAll)(userService.findActiveUsers)(userService.findDeletedUsers))
           },
           formData => {
-            userService.addUser(formData.name, formData.age)
+            val user = formData.toUser
+            userService.addUser(user)
             Ok(views.html.index(UserForm.form)(userService.findAll)(userService.findActiveUsers)(userService.findDeletedUsers))
           }
         )
@@ -51,19 +53,24 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
     */
 
   def getElementById(id: Int) = Action {
+    val tempUser = userService.findActiveUsers.filter(a => a.id == id).head
+
     println(id)
-    println(userService.makeJsonUser(id))
+    println(Json.toJson(tempUser)(User.writes))
     println(userService.findActiveUsers)
-    Ok(userService.makeJsonUser(id))
+
+    Ok(Json.toJson(tempUser)(User.writes))
   }
 
-  def edit = Action { request =>
-    val json = request.body.asJson.get
-    val id = (json \ "id").as[Int]
-    val name = (json \ "name").as[String]
-    val age = (json \ "age").as[String].toInt
-    userService.editUser(id, name, age)
-    Ok(userService.findAll(id).toString)
+
+  def edit(id: Int) = Action(parse.json(User.reads)) { request =>
+    val user = request.body
+
+    println(user.id + " " + user.name + " " + user.age + " " + user.deleted)
+
+    userService.editUser(user, id)
+    val users = userService.findAll
+    Ok(Json.toJson(users)(Writes.seq(User.writes))) // преобразует весь список по правилу
   }
 
 }

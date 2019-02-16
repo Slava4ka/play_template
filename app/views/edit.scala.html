@@ -58,7 +58,7 @@ $(document).ready(function () {
         $('#name').removeAttr('disabled');
         $('#age').removeAttr('disabled');
 
-        currentID = $(this).val() - 1;
+        currentID = $(this).val();
         console.log("currentID= " + currentID);
         $.ajax({
             url: "/send_id/" + currentID,
@@ -84,11 +84,11 @@ $(document).ready(function () {
             var obj = new Object();
             obj.id = currentID;
             obj.name = $('#name').val();
-            obj.age = $('#age').val();
+            obj.age = parseInt($('#age').val());
             console.log(obj);
 
             var xhr = new XMLHttpRequest();
-            var url = "/edit";
+            var url = "/edit/" + currentID;
             xhr.open("POST", url, true);
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.onload = function () {

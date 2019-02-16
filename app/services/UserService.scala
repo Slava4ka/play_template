@@ -3,7 +3,6 @@ package services
 import com.google.inject.Inject
 import daos.UserDAO
 import models.User
-import play.api.libs.json.{JsValue, Json, Writes}
 
 class UserService @Inject()(userDAO: UserDAO) {
   def findAll: Seq[User] = userDAO.findAll
@@ -12,24 +11,16 @@ class UserService @Inject()(userDAO: UserDAO) {
 
   def findActiveUsers: Seq[User] = userDAO.findActiveUsers
 
-  def addUser(name: String, age: Int): Unit = userDAO.addUser(name, age)
+  def addUser(user: User): Unit = userDAO.addUser(user)
 
   def removeUser(id: Int): Unit = userDAO.removeUser(id)
 
   def restoreUser(id: Int): Unit = userDAO.restoreUser(id)
 
-  def editUser(id: Int, name: String, age: Int): Unit = userDAO.editUser(id, name, age)
-
-  def makeJsonUser(id: Int): JsValue = {
-    implicit val userWrites = new Writes[User] {
-      def writes(user: User) = Json.obj(
-        "name" -> user.name,
-                "age" -> user.age,
-
-      )
-    }
-    val jsonUser = Json.toJson(findActiveUsers.filter(a => a.id == id+1).head)
-    jsonUser
+  def editUser(user: User, id: Int): Unit = {
+    val userCopy = user.copy(id = id)
+    println("userCopy: "+ userCopy)
+    userDAO.editUser(userCopy)
   }
 
 
