@@ -4,9 +4,9 @@ import com.google.inject.Inject
 import models.{User, UserForm}
 import play.api.libs.json.{Json, Writes}
 import play.api.mvc.{AbstractController, AnyContent, ControllerComponents, Request}
-import services.UserService
+import services.{UserService, UserBdService}
 
-class UserController @Inject()(cc: ControllerComponents, userService: UserService) extends AbstractController(cc) with play.api.i18n.I18nSupport {
+class UserController @Inject()(cc: ControllerComponents, userService: UserService, userBdService: UserBdService) extends AbstractController(cc) with play.api.i18n.I18nSupport {
 
   def index() = Action { implicit request: Request[AnyContent] =>
     val users = userService.findAll
@@ -62,7 +62,6 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
     Ok(Json.toJson(tempUser)(User.writes))
   }
 
-
   def edit(id: Int) = Action(parse.json(User.reads)) { request =>
     val user = request.body
 
@@ -72,5 +71,12 @@ class UserController @Inject()(cc: ControllerComponents, userService: UserServic
     val users = userService.findAll
     Ok(Json.toJson(users)(Writes.seq(User.writes))) // преобразует весь список по правилу
   }
-
 }
+
+
+
+
+
+
+
+

@@ -1,10 +1,9 @@
 import models.User
 import services.UserService
-import daos.UserDAO
+import daos.{UserBdDAO, UserDAO}
 import org.joda.time.DateTime
 import play.api.libs.json._
 import play.api.libs.json.JsObject
-
 import scala.util.parsing.json.JSONObject
 
 
@@ -61,3 +60,4 @@ var users3: Seq[User] =
     User(3, "Tom Ford", 28))
 
 val nameT = users3.filter(user => user.id==1)
+
